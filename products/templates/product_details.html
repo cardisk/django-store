@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ product.name }} - Django Store
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                {% else %}
+                    <img src="{% static 'images/placeholder.svg' %}" class="img-fluid rounded" alt="Image not available">
+                {% endif %}
+            </div>
+
+            <div class="col-md-6">
+                <h1>{{ product.name }}</h1>
+
+                {% if product.category %}
+                    <p class="text-muted">
+                        Category: <a href="{% url 'products:product_list_filtered' product.category.slug %}">{{ product.category.name }}</a>
+                    </p>
+                {% endif %}
+
+                <h2 class="my-3">€ {{ product.price }}</h2>
+
+                <p class="lead">{{ product.description|linebreaks }}</p>
+
+                <hr>
+
+                {% if product.stock > 0 %}
+                    <p class="text-success">In stock: ({{ product.stock }})</p>
+                    <a href="#" class="btn btn-primary btn-lg">Add to cart</a>
+                {% else %}
+                    <p class="text-danger">Out of stock</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

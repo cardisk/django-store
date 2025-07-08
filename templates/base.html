@@ -1,0 +1,88 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Django Store{% endblock title %}</title>
+
+    {# Load Boostrap5 css #}
+    {% bootstrap_css %}
+
+    {# Extra CSS #}
+    {% block extra_css %}{% endblock extra_css %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+{# --- NAVBAR --- #}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href={% url "products:product_list" %}>Django Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href={% url "products:product_list" %}>Products</a>
+                    </li>
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href={% url "login" %}>Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={% url "signup" %}>Sign Up</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown-center">
+                            <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Profile Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href={% url "profile" %}>My Profile</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">Shopping Cart</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{% url 'logout' %}" class="d-inline" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item">Log Out</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+{# --- MAIN CONTENT --- #}
+<main class="container mt-4 mb-4">
+    {% bootstrap_messages %}
+    {% block content %}
+    {% endblock content %}
+</main>
+
+{# --- FOOTER --- #}
+<footer class="mt-auto py-3 bg-light text-center">
+    <div class="container">
+        <span class="text-muted">© {% now "Y" %} Django Store. All rights reserved.</span>
+    </div>
+</footer>
+
+{# Load Bootstrap5 JS #}
+{% bootstrap_javascript %}
+
+{# Extra JS #}
+{% block extra_js %}{% endblock extra_js %}
+</body>
+</html>
