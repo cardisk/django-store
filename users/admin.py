@@ -27,5 +27,6 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'is_manager', 'city')
     list_filter = UserAdmin.list_filter + ('is_manager', 'city',)
+    list_editable = ['is_manager']
 
 admin.site.register(User, CustomUserAdmin)

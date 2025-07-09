@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, TemplateView
 from django.contrib import messages
 from products.models import Product
 from .cart import Cart
 
-class CartAddView(View):
+class CartAddView(LoginRequiredMixin, View):
     """
     Add a product to cart or update the quantity
     Only POST requests are handled.
@@ -17,11 +18,20 @@ class CartAddView(View):
 
         cart.add(product=product, quantity=quantity, override_quantity=False)
         redirect_url = request.META.get('HTTP_REFERER', 'products:product_list')
-        messages.success(request, 'Product[s] added to the cart')
+        messages.success(request, f'{product.name} added to the cart')
         return redirect(redirect_url)
 
+    def get(self, request, *args, **kwargs):
+        """
+        Handles the redirect from the login page.
+        The user was trying to add an item, but had to log in first.
+        We can't re-add the item as the POST data is lost.
+        """
+        messages.info(request, "You are now logged in. Please try adding the item to your cart again.")
+        return redirect('products:product_list')
 
-class CartRemoveView(View):
+
+class CartRemoveView(LoginRequiredMixin, View):
     """
     Remove a product from the shopping cart
     Only POST requests are handled.
@@ -33,7 +43,7 @@ class CartRemoveView(View):
         return redirect('cart:cart_detail')
 
 
-class CartDetailView(TemplateView):
+class CartDetailView(LoginRequiredMixin, TemplateView):
     """
     Show the cart content
     """
