@@ -2,7 +2,7 @@
 
 Elaborato backend `Full Website: e-commerce` per l'esame Progettazione e Produzione Multimediale.
 
-Il deploy del sito si trova al link: [****]()
+Il deploy del sito si trova al link: [**https://django-store-production.up.railway.app/**](https://django-store-production.up.railway.app/)
 
 ## Funzionalità del sito
 

@@ -37,7 +37,7 @@ COPY . .
 
 # Raccogli i file statici di Django
 # --noinput evita che il comando chieda conferme
-# RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 # Cambia il proprietario dei file all'utente "app"
 RUN chown -R app:app /app
