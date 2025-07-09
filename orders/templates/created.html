@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Thank You{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <h1>Thank You</h1>
+    {% if order %}
+        <p class="lead">Your order has been successfully placed. Your order ID is <strong>#{{ order.id }}</strong>.</p>
+        <p>We have sent a confirmation email to <strong>{{ order.email }}</strong>.</p>
+    {% else %}
+        <p class="lead">Your order has been successfully placed.</p>
+    {% endif %}
+    <a href="{% url 'products:product_list' %}" class="btn btn-primary">Continue Shopping</a>
+</div>
+{% endblock %}
