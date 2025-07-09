@@ -33,15 +33,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key-for-loca
 DEBUG = os.environ.get('DEBUG', '0') == '1'
 
 ALLOWED_HOSTS = []
-RAILWAY_STATIC_URL = os.environ.get('RAILWAY_STATIC_URL')
-if RAILWAY_STATIC_URL:
-    ALLOWED_HOSTS.append(RAILWAY_STATIC_URL.split('//')[1])
+CSRF_TRUSTED_ORIGINS = []
+RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
+if RAILWAY_PUBLIC_DOMAIN:
+    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_PUBLIC_DOMAIN}")
 
 ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost'])
-
-CSRF_TRUSTED_ORIGINS = []
-if RAILWAY_STATIC_URL:
-    CSRF_TRUSTED_ORIGINS.append(f"https://{ALLOWED_HOSTS[0]}")
 
 # Application definition
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
