@@ -20,6 +20,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
+    # Duplicate 'cause sometimes the redirection fails and I don't know why
     path('admin', admin.site.urls),
 
     path('cart/', include('cart.urls', namespace='cart')),

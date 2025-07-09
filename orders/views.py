@@ -2,7 +2,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.db import transaction
 from django.contrib import messages
-from django.views.generic import FormView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import FormView, TemplateView, ListView, DetailView
 from .models import Order, OrderItem
 from .forms import OrderCreateForm
 from cart.cart import Cart
@@ -107,3 +108,33 @@ class OrderCreatedView(TemplateView):
             except Order.DoesNotExist:
                 context['order'] = None
         return context
+
+class OrderListView(LoginRequiredMixin, ListView):
+    """
+    Display the list of orders for the current user.
+    """
+    model = Order
+    template_name = 'order_list.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        """
+        Return only the orders for the currently logged-in user.
+        """
+        return Order.objects.filter(user=self.request.user).order_by('-created')
+
+
+class OrderDetailView(LoginRequiredMixin, DetailView):
+    """
+    Display the details of a specific order.
+    """
+    model = Order
+    template_name = 'order_detail.html'
+    context_object_name = 'order'
+
+    def get_queryset(self):
+        """
+        Ensure the user can only view their own orders.
+        This is a crucial security measure.
+        """
+        return Order.objects.filter(user=self.request.user)
