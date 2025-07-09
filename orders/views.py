@@ -1,12 +1,14 @@
-from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import FormView, TemplateView, ListView, DetailView
+from django.views.generic import FormView, TemplateView, ListView, DetailView, DeleteView, View
+from users.mixins import ManagerRequiredMixin
+from cart.cart import Cart
 from .models import Order, OrderItem
 from .forms import OrderCreateForm
-from cart.cart import Cart
 
 class OrderCreateView(FormView):
     """
@@ -138,3 +140,27 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         This is a crucial security measure.
         """
         return Order.objects.filter(user=self.request.user)
+
+
+class ManagementOrderListView(ManagerRequiredMixin, ListView):
+    model = Order
+    template_name = 'management/order_list.html'
+    context_object_name = 'orders'
+    ordering = ['-created']
+
+class OrderMarkCompletedView(ManagerRequiredMixin, View):
+    def post(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        order.completed = True
+        order.save()
+        messages.success(request, f"Order #{order.id} has been marked as completed.")
+        return redirect('orders:manage_order_list')
+
+class OrderDeleteView(ManagerRequiredMixin, DeleteView):
+    model = Order
+    template_name = 'management/order_confirm_delete.html'
+    success_url = reverse_lazy('orders:manage_order_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, f"Order #{self.object.id} has been deleted.")
+        return super().form_valid(form)

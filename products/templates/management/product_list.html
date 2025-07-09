@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Manage Products{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Manage Products</h1>
+    <a href="{% url 'products:product_create' %}" class="btn btn-primary mb-3">Add New Product</a>
+    {% if products %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>€{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+                <td>
+                    <a href="{% url 'products:product_update' product.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+                    <a href="{% url 'products:product_delete' product.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No products found. <a href="{% url 'products:product_create' %}">Create the first one!</a></p>
+    {% endif %}
+</div>
+{% endblock %}
