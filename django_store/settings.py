@@ -19,6 +19,8 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+CART_SESSION_ID = 'cart'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -45,6 +47,8 @@ INSTALLED_APPS = [
 
     'products',
     'users',
+    'cart',
+    'orders',
 ]
 
 MIDDLEWARE = [

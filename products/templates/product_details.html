@@ -33,7 +33,15 @@
 
                 {% if product.stock > 0 %}
                     <p class="text-success">In stock: ({{ product.stock }})</p>
-                    <a href="#" class="btn btn-primary btn-lg">Add to cart</a>
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="me-3">
+                            <label for="quantity" class="form-label">Quantity:</label>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control" style="width: 80px;">
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
                 {% else %}
                     <p class="text-danger">Out of stock</p>
                 {% endif %}
