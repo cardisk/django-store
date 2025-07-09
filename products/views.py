@@ -11,15 +11,26 @@ class ProductsView(ListView):
     template_name = 'products.html'
     context_object_name = 'products'
 
+    category = None
+
     def get_queryset(self):
         products = Product.objects.all()
 
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
-            category_query = Category.objects.get(slug=category_slug)
-            products = category_query.products.all()
+            self.category = Category.objects.get(slug=category_slug)
+            products = self.category.products.all()
 
         return products
+
+    def get_context_data(self, **kwargs):
+        """
+        Extra data to use inside the template
+        """
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['current_category'] = getattr(self, 'category', None)
+        return context
 
 class ProductDetailsView(DetailView):
     """
